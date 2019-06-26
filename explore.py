@@ -37,33 +37,40 @@ ax.axis('off')
 
 
 
-# %%
+# %% reduce shapefiles
 
 from pathlib import Path
 import geopandas as gpd
-import matplotlib.pyplot as plt
 import gc
+import os
 
-
-#df_list = []
-fig, ax = plt.subplots(figsize=(15,9),facecolor=('#161616'))
-plt.tight_layout()
-ax.axis('off')
-#border.plot(edgecolor='white', lw=1, facecolor='#161616', ax = ax)
-
-for filename in Path('data').glob('**/rt_tramo_vial.shp'):
+for filename in Path('data/raw').glob('**/rt_tramo_vial.shp'):
     print(filename)
     df = gpd.read_file( filename )
-    clase_selection = [1001, 1002, 1005, 1003]
+    clase_selection = [1001, 1002, 1005, 1003, 2000]
     column_selection = ['clase','geometry']
     df_filter = df[df.clase.isin(clase_selection)][column_selection]
     df_filter.geometry = df_filter.geometry.simplify(tolerance=1, preserve_topology=False)
-    df_filter.plot(column='clase', cmap='spring', alpha=0.1, ax = ax)
-    gc.collect()
-plt.savefig('hey.png', facecolor=('#161616'), dpi=300 )
     
-#    df_list.append(df_filter)
-        
-#df = pd.concat(df_list)
+    f_ = str(filename).split('/')
+    folder = 'data/processed/' + f_[2] + '/'; os.mkdir(folder)
+    df_filter.to_file(folder + f_[5])
+    gc.collect()
 
+# %% join all reduced shapefiles
+    
+from pathlib import Path
+import geopandas as gpd
+import pandas as pd
+import gc
+import os
 
+df_list = []
+for filename in Path('data/processed').glob('**/rt_tramo_vial.shp'):
+    print(filename)
+    df = gpd.read_file( filename )
+    df_list.append(df)
+    gc.collect()
+
+df_total = pd.concat(df_list)
+df_total.to_file('spain.shp')
