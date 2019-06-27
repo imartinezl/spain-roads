@@ -11,34 +11,39 @@ import os
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import gc
-
-
-#df_list = []
-fig, ax = plt.subplots(figsize=(26,15),facecolor=('white'))
+from cartopy import crs as ccrs
+crs = ccrs.Orthographic(central_longitude=-5, central_latitude=40)
+crs_proj4 = crs.proj4_init
+fig, ax = plt.subplots(figsize=(12,10), facecolor=('#181818'))
 plt.tight_layout()
+
+border_file = 'ESP_adm/ESP_adm0.shp'
+border = gpd.read_file( border_file).to_crs(crs_proj4)
+ax = border.plot(color='#000000', lw=1, alpha=1, ax=ax)
+                 
+                 
+for filename in Path('data/processed').glob('**/rt_tramo_vial.shp'):
+	print(filename, str(round(os.path.getsize(filename)/1e6,2))+ "MB")
+	d = gpd.read_file( filename ).to_crs(crs_proj4)
+	ax = d.plot(color='#00ffff', lw=0.5, alpha=0.1, ax=ax)
+	ax = d.plot(color='#00ffff', lw=1, alpha=0.03, ax=ax)
+	ax = d.plot(color='#00ffff', lw=2, alpha=0.015, ax=ax)
+	gc.collect()
+    
+    
+ax.set_facecolor('#181818')
+#ax.set_xlim((-300000, 700000))
+#ax.set_ylim((-500000, 500000))
+ax.set_xlim((-400000, 800000))
+ax.set_ylim((-500000, 500000))
 ax.axis('off')
-#border.plot(edgecolor='white', lw=1, facecolor='#161616', ax = ax)
-
-for filename in Path('data/raw').glob('**/rt_tramo_vial.shp'):
-    print(filename, str(round(os.path.getsize(filename)/1e6,2))+ "MB")
-    df = gpd.read_file( filename )
-    clase_selection = [1001, 1002, 1005, 1003, 2000]
-    column_selection = ['clase','geometry']
-    df_filter = df[df.clase.isin(clase_selection)][column_selection]
-    df_filter.loc[df_filter.clase==1005, 'clase'] = 1003
-    df_filter.geometry = df_filter.geometry.simplify(tolerance=1, preserve_topology=False)
-    df_filter.plot(color='black', lw=1, alpha=0.08, ax = ax)
-    gc.collect()
-
-plt.axis('equal') 
 ax.set_aspect('equal')   
-plt.savefig('hey.png', facecolor=('white'), dpi=100 )
-
+plt.savefig('hey.png', facecolor=('#181818'), dpi=400 )
 
 # %%
 border_file = 'ESP_adm/ESP_adm0.shp'
 border = gpd.read_file( border_file)
-border.plot(color='black', lw=1)
+border.plot(color='white', edgecolor='red',lw=1)
 
 # Define the CartoPy CRS object.
 from cartopy import crs as ccrs
@@ -46,17 +51,16 @@ crs = ccrs.NearsidePerspective(
         central_longitude=-5, 
         central_latitude=40, 
         satellite_height=35785831/200)
+crs = ccrs.Orthographic(central_longitude=-5, central_latitude=40,)
 
 
 # This can be converted into a `proj4` string/dict compatible with GeoPandas
 crs_proj4 = crs.proj4_init
 border_ae = border.to_crs(crs_proj4)
-df_ae = df.to_crs(crs_proj4)
 
 # Here's what the plot looks like in GeoPandas
 border.plot()
 border_ae.plot()
-plt.plot(df)
 
 fig, ax = plt.subplots(figsize=(16,9), subplot_kw={'projection': crs})
 ax.add_geometries(border_ae['geometry'], crs=crs)
@@ -75,11 +79,32 @@ df.crs = {'init': 'epsg:4326', 'no_defs': True}
 df.plot()
 
 # %%
-filename = 'data/RT_ARABA_ALAVA/RT_ARABA_ALAVA/RT_VIARIA/rt_tramo_vial.shp'
+filename = 'data/spain.shp'
 df = gpd.read_file( filename )
-clase_selection = [1001, 1002, 1005, 1003, 2000]
-column_selection = ['clase','geometry']
-df_filter = df[df.clase.isin(clase_selection)][column_selection]
-df_filter.loc[df_filter.clase==1005, 'clase'] = 1003
-df_filter.geometry = df_filter.geometry.simplify(tolerance=1, preserve_topology=False)
-df_filter.plot(color='black', lw=1, alpha=0.08)
+df_nourban = df[df.clase != 2000]
+
+border_file = 'ESP_adm/ESP_adm0.shp'
+border = gpd.read_file( border_file)
+# %%
+from cartopy import crs as ccrs
+crs = ccrs.Orthographic(central_longitude=-5, central_latitude=40)
+crs_proj4 = crs.proj4_init
+fig, ax = plt.subplots(figsize=(12,10), facecolor=('#181818'))
+d = df_nourban.to_crs(crs_proj4)
+e =  border.to_crs(crs_proj4)
+
+ax = e.plot(color='#000000', lw=1, alpha=1, ax=ax)
+ax = d.plot(color='#00ffff', lw=1, alpha=0.11, ax=ax)
+ax = d.plot(color='#00ffff', lw=2.5, alpha=0.02, ax=ax)
+ax = d.plot(color='#00ffff', lw=5, alpha=0.015, ax=ax)
+ax.set_facecolor('#181818')
+#ax.set_xlim((-300000, 700000))
+#ax.set_ylim((-500000, 500000))
+ax.set_xlim((-400000, 800000))
+ax.set_ylim((-500000, 500000))
+ax.axis('off')
+ax.set_aspect('equal')   
+plt.savefig('hey.png', facecolor=('#181818'), dpi=400 )
+
+
+
