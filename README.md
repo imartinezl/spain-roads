@@ -1,6 +1,7 @@
 # spain-roads
 
 Visualization of Spain roads at country level and province level.
+
 Made with [Python 3.6.8](https://www.python.org/), [Geopandas 0.5.0](http://geopandas.org/) and [Matplotlib 3.1.0](https://matplotlib.org/). 
 
 ## Data Sources
@@ -11,10 +12,16 @@ Made with [Python 3.6.8](https://www.python.org/), [Geopandas 0.5.0](http://geop
 ## Visualizations
 
 [Full resolution image](figures/spain.jpg)
+![](figures/spain-min.jpg)
+
+___
+
 <p align="center">
-<img src="figures/spain-min.jpg"/>
-<img src="figures/pontevedra_6.png"/>
-<img src="figures/north.png"/>
+<img width="280px", src="figures/provinces_raw/RT_A_CORUNA.png" title="A CORUÑA"/>
+<img width="280px", src="figures/provinces_raw/RT_ALBACETE.png"/>
+<img width="280px", src="figures/provinces_raw/RT_ALICANTE_ALACANT.png"/>
 </p>
+
+
 
 
