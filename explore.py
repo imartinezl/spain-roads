@@ -9,7 +9,7 @@ Created on Tue Jun 25 20:36:19 2019
 # %%
 import geopandas as gpd
 
-border_file = 'ESP_adm/ESP_adm0.shp'
+border_file = 'data/ESP_adm/ESP_adm0.shp'
 border = gpd.read_file( border_file)
 
 file = 'data/RT_GIPUZKOA/RT_GIPUZKOA/RT_VIARIA/rt_tramo_vial.shp'

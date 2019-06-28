@@ -17,7 +17,7 @@ crs_proj4 = crs.proj4_init
 fig, ax = plt.subplots(figsize=(12,10), facecolor=('#181818'))
 plt.tight_layout()
 
-border_file = 'ESP_adm/ESP_adm0.shp'
+border_file = 'data/ESP_adm/ESP_adm0.shp'
 border = gpd.read_file( border_file).to_crs(crs_proj4)
 ax = border.plot(color='#000000', lw=1, alpha=1, ax=ax)
                  
