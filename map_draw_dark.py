@@ -52,14 +52,12 @@ m = ["RT_GRANADA","RT_GUADALAJARA","RT_HUELVA","RT_ALBACETE",
                  
 #for filename in Path('data/processed').glob('**/rt_tramo_vial.shp'):
 for filename in [prefix + x + suffix for x in m]:
-    print( str(filename).split('/')[2] )
-    if(filename not in []):
-        print(filename, str(round(os.path.getsize(filename)/1e6,2))+ "MB")
-        d = gpd.read_file( filename ).to_crs(crs_proj4)
-        ax = d.plot(color='#00ffff', lw=0.5, alpha=0.1, ax=ax)
-        ax = d.plot(color='#00ffff', lw=1, alpha=0.03, ax=ax)
-        ax = d.plot(color='#00ffff', lw=2, alpha=0.015, ax=ax)
-        gc.collect()
+	print(filename, str(round(os.path.getsize(filename)/1e6,2))+ "MB")
+	d = gpd.read_file( filename ).to_crs(crs_proj4)
+	ax = d.plot(color='#00ffff', lw=0.5, alpha=0.1, ax=ax)
+	ax = d.plot(color='#00ffff', lw=1, alpha=0.03, ax=ax)
+	ax = d.plot(color='#00ffff', lw=2, alpha=0.015, ax=ax)
+	gc.collect()
     
     
 ax.set_facecolor('#181818')
